@@ -1,4 +1,4 @@
-
+![FMView](FMView.png)
 ## FMView  ##
 
 FMView is a Windows application designed to simplify review and interaction with
@@ -51,3 +51,8 @@ Main differences with version 1:
 
 ### Support ###
 Questions, suggestions, and criticisms are welcome at zzFMTools@gmail.com
+
+### Credits ###
+Special thanks to the [**WorldVistA open-source community**](https://worldvista.org/) for providing access to test databases, engaging in discussions, and offering invaluable feedback.
+
+**2025.05.14**
