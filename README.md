@@ -1,4 +1,4 @@
-![RPC View](FMView.png)
+![FMView](FMView.png)
 ## FMView  ##
 
 FMView is a Windows application designed to simplify review and interaction with
