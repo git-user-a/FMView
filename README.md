@@ -24,9 +24,7 @@ To prevent any damage to your important data, please test the application
 on a non-production DB instance first and make sure it is compatible
 with your server software version before accessing any critical data.
 
-Please note that the application is provided <strong>"AS IS" with no warranties</strong>
-and the author is not responsible for any data loss or damage
-that may occur as a result of using this application.
+> **Note:** The application is provided **"AS IS" WITH NO WARRANTIES**—the author is not responsible for any data loss or damage that may occur as a result of using this application.
 
 ### Privacy Policy ###
 The application does not collect any personal information from the user.
