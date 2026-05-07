@@ -1,7 +1,7 @@
-VWFMVIEW ; WAA/AA - FMVIEW GUI INTERFACE ROUTINE ; AUG 23, 2012@11:54
- ;;1.42;ZZFMVIEW;;Jan 10, 2025@13:31;;
+ZZFMVIEW ; WAA/AA - FMVIEW GUI INTERFACE ROUTINE ; AUG 23, 2012@11:54
+ ;;1.44;ZZFMVIEW;;May 07, 2026@06:26;;
  ;
- ; (C) 2025 WorldVistA.
+ ; (C) 2025..2026 WorldVistA.
  ;
  ; This program is free software: you can redistribute it and/or modify
  ; it under the terms of the GNU Affero General Public License as
@@ -382,3 +382,9 @@ ZRCHKSUM(NAME) ;Returns checksum of routine
  I $T X ^%ZOSF("RSUM") S R=X_"^"_Y_"^"_$$ZLOAD2L(X)
  I '$T S R=X_"^?"
  Q R
+ISPROD ;;; Returns 1 if called in production account
+ S RESULT(0)=$$PROD^XUPROD
+ Q
+HASKEY ;;; Returns 1 if user posessess the security key
+ S RESULT(0)=''$D(^XUSEC(ARRAY(0),DUZ))
+ Q
