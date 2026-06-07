@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FMView v.2.0 — User Manual</title>
+  <style>
+    :root {
+      --brand:        #5a7a3a;
+      --brand-light:  #f0f4e8;
+      --brand-mid:    #d4e0b8;
+      --accent:       #3a5a7a;
+      --warn-bg:      #fff8e1;
+      --warn-border:  #f0a500;
+      --note-bg:      #e8f4fd;
+      --note-border:  #3a9fd4;
+      --danger-bg:    #fdecea;
+      --danger-border:#c0392b;
+      --code-bg:      #f4f4e8;
+      --text:         #222;
+      --text-light:   #555;
+      --border:       #d0d8c0;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; padding: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 15px; line-height: 1.65;
+      color: var(--text); background: #fafaf6;
+    }
+    .page {
+      max-width: 900px; margin: 0 auto; padding: 0 16px 48px;
+      background: #fff;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+
+    /* Header */
+    .doc-header {
+      display: flex; align-items: center; gap: 20px;
+      padding: 20px 0 16px; flex-wrap: wrap;
+      border-bottom: 3px solid var(--brand);
+    }
+    .doc-header img { height: 80px; flex-shrink: 0; }
+    .doc-header h1 {
+      margin: 0 0 2px; font-size: 1.9em; color: var(--brand);
+      font-family: 'Segoe UI', Tahoma, sans-serif; font-weight: 700;
+    }
+    .doc-header .sub {
+      font-size: 0.85em; color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--brand-light); border: 1px solid var(--brand-mid);
+      border-radius: 6px; padding: 16px 22px; margin: 22px 0;
+    }
+    .toc h2 {
+      margin: 0 0 10px; font-size: 0.95em; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--brand);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+    .toc ol { margin: 0; padding-left: 20px; }
+    .toc li { margin: 5px 0; }
+    .toc a { color: var(--accent); text-decoration: none; font-size: 0.88em; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    .toc a:hover { text-decoration: underline; }
+    .toc li > a:first-child { font-weight: 700; font-size: 0.9em; }
+    .toc-sub { color: var(--text-light); font-size: 0.85em; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    .toc-sub a { font-weight: normal; font-size: 1em; color: var(--text-light); }
+    .toc li > a:first-child + .toc-sub::before { content: ''; }
+    .toc li > a:first-child ~ .toc-sub { margin-left: 2px; }
+
+    /* Section headers */
+    .sec {
+      background: var(--brand-light); border-left: 5px solid var(--brand);
+      margin: 30px -16px 0; padding: 7px 16px 7px 13px;
+    }
+    .sec h2 {
+      margin: 0; font-size: 1.1em; color: var(--brand);
+      font-family: 'Segoe UI', Tahoma, sans-serif; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+
+    /* Two-column rows */
+    .row { display: flex; gap: 0; padding: 14px 0; border-bottom: 1px solid #eee; }
+    .lbl {
+      width: 155px; min-width: 155px; padding-right: 16px; padding-top: 2px;
+      font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 0.84em;
+      font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .cnt { flex: 1; min-width: 0; }
+    @media (max-width: 560px) {
+      .row { flex-direction: column; }
+      .lbl { width: 100%; min-width: unset; padding-right: 0; padding-bottom: 4px;
+             border-bottom: 1px dashed var(--border); margin-bottom: 8px; }
+    }
+
+    /* Images */
+    .ic { text-align: center; margin: 12px 0; }
+    .ic img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 3px; }
+    .cnt p img { border: none; vertical-align: middle; max-width: 100%; }
+
+    /* Callouts */
+    .box {
+      border-left: 4px solid; border-radius: 0 4px 4px 0;
+      padding: 9px 13px; margin: 10px 0; font-size: 0.91em;
+    }
+    .box b { display: block; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 0.82em;
+              text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+    .warn  { background: var(--warn-bg);   border-color: var(--warn-border); }
+    .warn b  { color: #b07800; }
+    .info  { background: var(--note-bg);   border-color: var(--note-border); }
+    .info b  { color: #1a7aab; }
+    .dang  { background: var(--danger-bg); border-color: var(--danger-border); }
+    .dang b  { color: var(--danger-border); }
+
+    /* Typography */
+    h3 { font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; margin: 14px 0 5px; font-size: 0.97em; }
+    p  { margin: 7px 0; }
+    ul, ol { margin: 5px 0; padding-left: 22px; }
+    li { margin: 3px 0; }
+    code {
+      font-family: 'Courier New', Courier, monospace; font-size: 0.87em;
+      background: var(--code-bg); padding: 1px 4px; border-radius: 3px; border: 1px solid #ddd;
+    }
+    pre {
+      font-family: 'Courier New', Courier, monospace; font-size: 0.87em;
+      background: var(--code-bg); border: 1px solid #ccc; border-radius: 4px;
+      padding: 11px 15px; overflow-x: auto; white-space: pre; margin: 10px 0;
+    }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    ol.steps { padding-left: 22px; }
+    ol.steps li { margin: 5px 0; }
+    .back { font-size: 0.8em; color: var(--text-light); margin-top: 10px; }
+    .back a { color: var(--text-light); }
+
+    /* Tables */
+    .rtab { width: 100%; border-collapse: collapse; font-size: 0.89em; margin: 9px 0; }
+    .rtab th {
+      background: var(--brand-light); border: 1px solid var(--border);
+      padding: 5px 9px; text-align: left; font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 0.83em; color: var(--brand); text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .rtab td { border: 1px solid var(--border); padding: 6px 9px; vertical-align: top; }
+    .rtab tr:nth-child(even) td { background: #fafaf6; }
+
+    /* Glossary */
+    dl.glos dt {
+      font-family: 'Segoe UI', Tahoma, sans-serif; font-weight: 700;
+      font-size: 0.9em; color: var(--accent); margin-top: 10px;
+    }
+    dl.glos dd { margin: 2px 0 0 18px; font-size: 0.91em; }
+
+    /* Footer */
+    .foot {
+      border-top: 2px solid var(--brand-mid); margin-top: 30px;
+      padding: 12px 0 4px; text-align: right;
+      font-size: 0.81em; color: var(--text-light);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+    .foot a { color: var(--text-light); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<header class="doc-header">
+  <a href="https://github.com/git-user-a"><img src="images/zz.PNG" alt="FMView logo"/></a>
+  <div>
+    <h1>FMView v.2.0 — User Manual</h1>
+    <div class="sub">Released April 24, 2026</div>
+  </div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc" id="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#Overview">Overview</a> — <span class="toc-sub"><a href="#Application">Application</a> · <a href="#SysReq">System Requirements</a> · <a href="#Disclaimer">Disclaimer</a> · <a href="#Privacy">Privacy Policy</a> · <a href="#Implementation">Implementation</a></span></li>
+    <li><a href="#QuickStart">Quick Start</a> — <span class="toc-sub"><a href="#Installation">Installation</a> · <a href="#FirstStart">First Start</a></span></li>
+    <li><a href="#ScreenLayout">Screen Layout</a> — <span class="toc-sub"><a href="#TitleBar">Title Bar</a> · <a href="#ProjectView">Project View</a> · <a href="#ProjectList">Project List</a></span></li>
+    <li><a href="#ProjectDetail">Project View Detail</a> — <span class="toc-sub"><a href="#Toolbar">Toolbar</a> · <a href="#ProjectItems">Project Items</a> · <a href="#DataViewer">Data Viewer</a> · <a href="#StatusBar">Status Bar</a></span></li>
+    <li><a href="#GlobalsView">Globals View</a> — <span class="toc-sub"><a href="#GlobalsViewing">Viewing a Global</a> · <a href="#GlobalsSearching">Searching Within a Global</a></span></li>
+    <li><a href="#FMFileView">FMFile View</a> — <span class="toc-sub"><a href="#FMFILES">Selecting Files</a> · <a href="#FileView">FM Files Viewer</a> · <a href="#FMDescriptionTab">Description Tab</a> · <a href="#FMDataTab">Data Tab</a> · <a href="#FMDDTabs">DD, DIC &amp; GLOBAL Tabs</a> · <a href="#FMIndexesTab">INDEXES Tab</a></span></li>
+    <li><a href="#RoutineView">Routines View</a> — <span class="toc-sub"><a href="#RoutineOpening">Opening the Viewer</a> · <a href="#RoutineToolbar">Source Toolbar</a> · <a href="#RoutineNavigation">Navigating from Source</a> · <a href="#RoutineComparing">Comparing Routines</a> · <a href="#RoutineCompareLayout">Compare Window Layout</a></span></li>
+    <li><a href="#RPCView">RPC View</a> — <span class="toc-sub"><a href="#RPCDescriptionTab">Description Tab</a> · <a href="#RPCImplementationTab">Implementation Tab</a> · <a href="#RPCExecuteTab">Execute Tab</a></span></li>
+    <li><a href="#RPCLog">Event Log</a></li>
+    <li><a href="#File19">Options File</a></li>
+    <li><a href="#ErrorLog">VistA Error Log</a></li>
+    <li><a href="#Parameters">Parameters File</a></li>
+    <li><a href="#Configuration">Configuration &amp; Preferences</a> — <span class="toc-sub"><a href="#ConfigFile">Configuration File</a> · <a href="#MasterPass">Master Password</a> · <a href="#PrefDialog">Preferences Dialog</a> · <a href="#PrefMenu">Preferences Menu</a> · <a href="#Autosave">Autosave</a> · <a href="#StartupParams">Startup Parameters</a> · <a href="#Tips">Tips</a></span></li>
+    <li><a href="#RPC">Custom RPC</a></li>
+    <li><a href="#Glossary">Glossary</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. OVERVIEW
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="Overview"><h2>1. Overview</h2></div>
+
+<div class="row" id="Application">
+  <div class="lbl">Application</div>
+  <div class="cnt">
+    <p>FMView is a Windows application designed to simplify the review and interaction with various components of the Veterans Health Information Systems and Technology Architecture (VistA). With FMView, users can:</p>
+    <ul>
+      <li><a href="#FMFileView">View</a> the definitions and contents of FileMan files, including data dictionaries, file attributes, and data entries.</li>
+      <li><a href="#RoutineView">View</a> M routines.</li>
+      <li><a href="#GlobalsView">View</a> VistA globals.</li>
+      <li><a href="#RPCView">Execute and review the implementation</a> of remote procedures.</li>
+    </ul>
+    <p>FMView requires the XWB and FMDC packages to be installed on the server, as well as a custom <a href="#RPC">RPC</a> (remote procedure call) to access file definitions and routine source code on VistA accounts. This application is designed to work with Caché and GT.M environments and to connect to VistA instances that use the hash tables <em>VistA</em>, <em>VistA Demo</em>, and <em>OSHERA</em>.</p>
+  </div>
+</div>
+
+<div class="row" id="SysReq">
+  <div class="lbl">System Requirements</div>
+  <div class="cnt">
+    <table class="rtab">
+      <tr><th>Component</th><th>Requirement</th></tr>
+      <tr><td>Operating System</td><td>Windows 7 or later (64-bit recommended)</td></tr>
+      <tr><td>Server packages</td><td>XWB (VistA Broker) and FMDC v1.0 installed on the VistA server</td></tr>
+      <tr><td>VistA environment</td><td>Caché or GT.M</td></tr>
+      <tr><td>Supported hash tables</td><td><em>VistA</em>, <em>VistA Demo</em>, <em>OSHERA</em></td></tr>
+      <tr><td>Custom RPC</td><td><code>ZZFMVIEW</code> registered on the target VistA account (see <a href="#RPC">Custom RPC</a>)</td></tr>
+      <tr><td>Network</td><td>TCP/IP access to the VistA Broker port on the server</td></tr>
+      <tr><td>Disk space</td><td>Write access to the installation folder (for the configuration file)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="row" id="Disclaimer">
+  <div class="lbl">Disclaimer</div>
+  <div class="cnt">
+    <div class="box dang">
+      <b>⚠ Important — Data Safety</b>
+      This application enables users to view and modify data on both server and client machines. It is <strong>not</strong> intended to be a VistA data-editing tool, and improper use may cause data corruption or loss. Test the application on a <strong>non-production database instance</strong> first and verify compatibility with your server software version before accessing any critical data.
+    </div>
+    <p>This application is provided <strong>"AS IS" WITH NO WARRANTIES</strong>. The author is not responsible for any data loss or damage that may occur as a result of using this application.</p>
+  </div>
+</div>
+
+<div class="row" id="Privacy">
+  <div class="lbl">Privacy Policy</div>
+  <div class="cnt">
+    <p>The application does not collect any personal information from the user. It may create a log file that records connections to VistA accounts and RPC executions. This log file is stored on the local machine where the application is running.</p>
+    <p>By default, configuration information is saved in the user's <code>AppData\Roaming\FMView</code> folder.</p>
+  </div>
+</div>
+
+<div class="row" id="Implementation">
+  <div class="lbl">Implementation</div>
+  <div class="cnt">
+    <p>FMView v.2.0 is built with Embarcadero Delphi 12 (Community Edition). VistA file data is accessed through the FileMan Delphi Components (FMDC v1.0) library. Information about VistA component definitions — file definitions, routine source code, and global contents — is provided by a custom <a href="#RPC">RPC</a>. Communication with VistA servers is handled by a customized version of VistA Broker. The SynEdit and VirtualTree (TurboPack) packages are used for routine syntax highlighting and data presentation.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. QUICK START
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="QuickStart"><h2>2. Quick Start</h2></div>
+
+<div class="row" id="Installation">
+  <div class="lbl">Installation</div>
+  <div class="cnt">
+    <ol class="steps">
+      <li>Place the application executable in a folder to which you have write access.</li>
+      <li>Create a desktop shortcut if you need to pass custom startup parameters.</li>
+      <li>Register the <a href="#RPC">custom RPC</a> (<code>ZZFMVIEW</code>) on each target VistA account before connecting.</li>
+    </ol>
+    <div class="box info">
+      <b>ℹ Note</b>
+      The application does not require a formal installer. The executable is self-contained, and the configuration file is created automatically on first run.
+    </div>
+  </div>
+</div>
+
+<div class="row" id="FirstStart">
+  <div class="lbl">First Start</div>
+  <div class="cnt">
+    <p>Start the application by clicking its executable or shortcut in Windows Explorer.</p>
+    <p>At startup, the application loads data from the configuration file, which stores connection parameters, open window descriptions, user comments, interface preferences, and more.</p>
+    <p>The very first time the application is launched, no configuration file exists, and the user is prompted to enter VistA connection parameters in the <strong>VistA Account List</strong> dialog.</p>
+    <div class="ic"><img src="images/VistAAccountList.png" alt="VistA Account List dialog"/></div>
+
+    <h3>Creating a Connection Record</h3>
+    <ol class="steps">
+      <li>Click the <strong>New</strong> button.</li>
+      <li>Fill in the connection record fields, replacing the default values:
+        <div class="ic"><img src="images/VistAAccountListDefault.png" alt="New connection record"/></div>
+        <ul>
+          <li><strong>Caption</strong> — A descriptive name for this connection record.</li>
+          <li><strong>Server</strong> — The IP address or hostname of the VistA server.</li>
+          <li><strong>Port</strong> — The port number used by the VistA Broker service.</li>
+          <li><strong>Access;Verify Codes</strong> — The user's Access and Verify codes, separated by a semicolon (<code>;</code>).</li>
+          <li><strong>RPC Name</strong> — The name of the custom RPC (<code>ZZFMVIEW</code> by default).</li>
+          <li><strong>Application Context</strong> — The context in which the RPC is registered.</li>
+          <li><strong>Hash</strong> — The selected hash table.</li>
+        </ul>
+      </li>
+      <li>Click <strong>OK</strong> to save the record and close the dialog.</li>
+    </ol>
+    <p>You can create multiple connection records for different VistA servers and switch between them using the drop-down list on the main toolbar. When finished adding records, click <strong>OK</strong>.</p>
+
+    <h3>Connecting to a Server</h3>
+    <ol class="steps">
+      <li>Select a connection record from the drop-down list on the main toolbar.</li>
+      <li>Click the <strong>Connect</strong> button.</li>
+      <li>Check the status bar for the connection result.</li>
+    </ol>
+    <p>If the connection is successful, the toolbar buttons become active:</p>
+    <div class="ic"><img src="images/ConnectionToolbar.png" alt="Enabled toolbar buttons"/></div>
+
+    <h3>If the Connection Fails</h3>
+    <p>A warning message is displayed and the toolbar buttons are disabled:</p>
+    <div class="ic"><img src="images/ConnectionFailed.png" alt="Connection failed warning"/></div>
+    <div class="ic"><img src="images/ConnectionFailedToolbar.png" alt="Disabled toolbar buttons"/></div>
+    <p>Click the <strong>Connect</strong> button to review the connection parameters and try again.</p>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. SCREEN LAYOUT
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="ScreenLayout"><h2>3. Screen Layout</h2></div>
+
+<div class="row">
+  <div class="lbl">Default Layout</div>
+  <div class="cnt">
+    <p>The application window consists of three main areas:</p>
+    <ul>
+      <li><strong>Title bar</strong> — top green rectangle</li>
+      <li><strong>Project view</strong> — middle blue rectangle</li>
+      <li><strong>Project list</strong> — bottom green rectangle</li>
+    </ul>
+    <div class="ic"><img src="images/MainWindowLayout.PNG" alt="Main window layout"/></div>
+  </div>
+</div>
+
+<div class="row" id="TitleBar">
+  <div class="lbl">Title Bar</div>
+  <div class="cnt">
+    <p>The title bar is located at the top-right corner of the application window.</p>
+    <div class="ic"><img src="images/CustomTitleBar.png" alt="Custom title bar"/></div>
+    <p>It contains the following buttons (from left to right):</p>
+    <ul>
+      <li>Switch from the title bar to the window main menu</li>
+      <li>Open the account list for viewing or editing</li>
+      <li>Enter the master password</li>
+      <li>Reconnect all accounts</li>
+      <li>Save current preferences to a file</li>
+      <li>Load preferences from a file</li>
+      <li>Add a new project tab</li>
+      <li>Close the current project tab</li>
+      <li>About (application information)</li>
+      <li>FileMan help (link to HardHats.org)</li>
+      <li>Application user manual</li>
+      <li>Standard Minimize, Maximize, and Close window buttons</li>
+    </ul>
+    <div class="box info"><b>ℹ Tip</b>Hover the mouse pointer over any button to see its tooltip description.</div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<div class="row" id="ProjectView">
+  <div class="lbl">Project View</div>
+  <div class="cnt">
+    <p>An FMView <em>project</em> is a set of data views associated with the same VistA account. Project definitions are saved between user sessions in the configuration file, and projects are automatically restored the next time the application is started.</p>
+    <div class="box warn"><b>⚠ Performance Note</b>The number of views in a project is not limited; however, restoring large projects may take a significant amount of time.</div>
+    <p>Every project view includes:</p>
+    <ul>
+      <li>Toolbar (red)</li>
+      <li>List of project items (blue)</li>
+      <li>Data Viewer (green)</li>
+      <li>Status bar (purple)</li>
+    </ul>
+    <div class="ic"><img src="images/DataView.png" alt="Project view layout"/></div>
+  </div>
+</div>
+
+<div class="row" id="ProjectList">
+  <div class="lbl">Project List</div>
+  <div class="cnt">
+    <p>By default, the project list is displayed at the bottom of the application window:</p>
+    <div class="ic"><img src="images/ViewerList.png" alt="Project list"/></div>
+    <p>Each project has a tab associated with its project window. The title of the currently selected project tab is shown in <strong>bold</strong>.</p>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. PROJECT VIEW DETAIL
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="ProjectDetail"><h2>4. Project View Detail</h2></div>
+
+<div class="row" id="Toolbar">
+  <div class="lbl">Toolbar</div>
+  <div class="cnt">
+    <div class="ic"><img src="images/AccountToolBar.PNG" alt="Project toolbar"/></div>
+    <p>The toolbar buttons provide quick access to functions that control project tabs:</p>
+    <ul>
+      <li><a href="#RPCLog">Event Log</a> — opens the Event Log window</li>
+      <li><a href="#Configuration">Preferences</a> — opens application UI settings</li>
+      <li><a href="#FMFileView">File</a> — opens the FileMan file viewer</li>
+      <li><a href="#GlobalsView">Global</a> — opens the Global viewer</li>
+      <li><a href="#RoutineView">Routine</a> — opens the Routine viewer</li>
+      <li><a href="#RPCView">RPC</a> — opens the RPC viewer</li>
+      <li><a href="#File19">Options</a> — opens the Options file (#19) viewer</li>
+      <li>Note — creates a text note</li>
+      <li><a href="#ErrorLog">Error Log</a> — opens the Error Log file viewer</li>
+      <li><a href="#Parameters">Parameters</a> — opens the Parameters file (#8989.5) viewer</li>
+      <li>Close All — closes all open viewers</li>
+      <li>Close — closes the active viewer</li>
+      <li>Connect — reconnects to the server</li>
+      <li>Disconnect — drops the server connection</li>
+    </ul>
+    <p>Each opened viewer is added to the project.</p>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<div class="row" id="ProjectItems">
+  <div class="lbl">Project Items</div>
+  <div class="cnt">
+    <div class="ic"><img src="images/ItemList.PNG" alt="Project items list"/></div>
+    <div class="box warn"><b>⚠ Performance Note</b>The number of items in a project is not limited. Large projects require considerable time to load and save.</div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<div class="row" id="DataViewer">
+  <div class="lbl">Data Viewer</div>
+  <div class="cnt">
+    <p>The Data Viewer displays data for the item selected in the project items list. The viewer layout and contents depend on the selected item. The application provides viewers for:</p>
+    <ul>
+      <li>FileMan files</li>
+      <li>Globals</li>
+      <li>Routines</li>
+      <li>Remote procedures</li>
+      <li>Error Log file</li>
+      <li>Options file</li>
+    </ul>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<div class="row" id="StatusBar">
+  <div class="lbl">Status Bar</div>
+  <div class="cnt">
+    <p>The status bar displays the name of the viewed item, the RPC used to retrieve data, and the connection status.</p>
+    <div class="ic"><img src="images/StatusBar.PNG" alt="Status bar"/></div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. GLOBALS VIEW
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="GlobalsView"><h2>5. Globals View</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The Globals View allows you to browse and explore data in VistA globals. Open it by clicking the <img src="images/btnGlobals.PNG" alt="Globals button"/> button on the Project toolbar.</p>
+
+    <h3 id="GlobalsViewing">Viewing a Global</h3>
+    <ol class="steps">
+      <li>Enter the global name in the input field at the top of the window.</li>
+      <li>Press <strong>Enter</strong>.</li>
+      <li>The window displays a table showing the row number, node, and value for each entry.</li>
+    </ol>
+    <p>The default maximum number of rows displayed is 50. Change this using the input field in the top-right corner. Use the <img src="images/ViewerGlobalMore.PNG" alt="Load more buttons"/> buttons to load additional nodes (before the first or after the last displayed node).</p>
+    <div class="ic"><img src="images/Global_View.PNG" alt="Globals view"/></div>
+    <div class="box info"><b>ℹ Note</b>A green background indicates that the search target matches the node name.</div>
+
+    <h3 id="GlobalsSearching">Searching Within a Global</h3>
+    <table class="rtab">
+      <tr><th>Action</th><th>Keyboard Shortcut</th></tr>
+      <tr><td>Open search field</td><td><code>Ctrl+F</code></td></tr>
+      <tr><td>Search forward from selected node</td><td><code>Enter</code></td></tr>
+      <tr><td>Search backward</td><td><code>Ctrl+Enter</code></td></tr>
+      <tr><td>Exit search mode</td><td><code>Esc</code></td></tr>
+    </table>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     6. FMFILE VIEW
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="FMFileView"><h2>6. FMFile View</h2></div>
+
+<div class="row" id="FMFILES">
+  <div class="lbl">Selecting Files</div>
+  <div class="cnt">
+    <ol class="steps">
+      <li>Click the <img src="images/btnFMFiles.PNG" alt="FM Files button"/> button on the Project toolbar.</li>
+      <li>The file search dialog opens, listing files registered in VistA file #1:
+        <div class="ic"><img src="images/FileSelect.PNG" alt="File search dialog"/></div>
+      </li>
+      <li>Search by file name or number, or use the alphabet buttons to navigate quickly.</li>
+      <li>Select the check boxes next to the files you want to review.</li>
+      <li>Click <strong>OK</strong>. The selected files are added to the project items list.</li>
+    </ol>
+  </div>
+</div>
+
+<div class="row" id="FileView">
+  <div class="lbl">FM Files Viewer</div>
+  <div class="cnt">
+    <p>This viewer displays the following information for each file:</p>
+    <ul>
+      <li>File description (including field definitions)</li>
+      <li>File data</li>
+      <li>The global associated with the file</li>
+      <li>Nodes of the DD and DIC globals related to the file</li>
+      <li>Indexes defined for the file</li>
+    </ul>
+    <p>Use the tabs at the bottom of the viewer to access the file description, data, data dictionary, and DIC entries.</p>
+
+    <h3 id="FMDescriptionTab">Description Tab</h3> with the following sections:</p>
+    <div class="ic"><img src="images/FMFile_DescriptionSections.PNG" alt="File description sections"/></div>
+    <ul>
+      <li>General description — DIC data (version, identifiers, etc.)</li>
+      <li>Field definitions — all fields, including multiple-value field structures</li>
+      <li>Traditional cross-references (<code>^DD(#file, #field data)</code>)</li>
+      <li>New-style cross-references (data from INDEX file [#.11])</li>
+      <li>List of references to this file from other files</li>
+    </ul>
+    <p>A toolbar in the upper-right corner lets you expand and collapse tree nodes. Select a node to view its detailed description:</p>
+    <div class="ic"><img src="images/FMFile_Description.PNG" alt="File description detail"/></div>
+
+    <h3 id="FMDataTab">Data Tab</h3>
+    <p>Allows you to review file data in table format. Select fields from the list on the right. Word-processing and multiple-value fields are shown below the main table.</p>
+    <div class="ic"><img src="images/FMFile_DataTab.PNG" alt="File data tab"/></div>
+
+    <h3 id="FMDDTabs">DD, DIC, and GLOBAL Tabs</h3>
+    <p>Provide quick access to the globals associated with the file.</p>
+
+    <h3 id="FMIndexesTab">INDEXES Tab</h3>
+    <p>Allows you to review cross-references defined for the file.</p>
+    <div class="ic"><img src="images/FMFile_INDEXES.PNG" alt="File indexes tab"/></div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     7. ROUTINES VIEW
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="RoutineView"><h2>7. Routines View</h2></div>
+
+<div class="row" id="ROUTINES">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <h3 id="RoutineOpening">Opening the Routines Viewer</h3>
+    <ol class="steps">
+      <li>Click the <img src="images/btnRoutines.PNG" alt="Routines button"/> button on the Account toolbar.</li>
+      <li>The routine selection dialog opens:
+        <div class="ic"><img src="images/RoutineSelect.PNG" alt="Routine selection dialog"/></div>
+      </li>
+      <li>Use the alphabet buttons or type to filter by name.</li>
+      <li>Select the check boxes next to the routines you want to review.</li>
+      <li>Click <strong>OK</strong>. The selected routines are placed in the project items list.</li>
+      <li>Click a routine name in the list to open the routine viewer:
+        <div class="ic"><img src="images/Routine_Source.PNG" alt="Routine source viewer"/></div>
+      </li>
+    </ol>
+
+    <h3 id="RoutineToolbar">Source Toolbar</h3>
+    <div class="ic"><img src="images/Source_Toolbar.PNG" alt="Source toolbar"/></div>
+    <p>The source toolbar is located at the top-right corner of the window.
+    Most buttons act as toggles that enable or disable specific editor features.
+    Buttons (from left to right):</p>
+    <ul>
+      <li><strong>Refresh</strong> — reloads the routine source from VistA</li>
+      <li><strong>Toggle Read-Only mode</strong> — when active, text is not editable</li>
+      <li><strong>Save As</strong> — saves the source text to VistA</li>
+      <li>Show/Hide line numbers</li>
+      <li>Wrap mode On/Off</li>
+      <li>Enable use of tabs in the editor</li>
+      <li>Show/Hide the outline panel</li>
+      <li>Show/Hide line numbers in the outline panel</li>
+      <li>Select all lines of the routine source</li>
+      <li>Copy selected lines to the clipboard</li>
+      <li>Paste clipboard contents</li>
+      <li>Compare source code with that from another account</li>
+    </ul>
+    <div class="box warn">
+      <b>⚠ Write Access</b>
+      Saving routine source code to VistA requires the <code>/GW</code> startup switch. Without it, the <strong>Save As</strong> button is inactive.
+    </div>
+
+    <h3 id="RoutineNavigation">Navigating from Source Code</h3>
+    <p>The popup menu allows you to quickly open files, routines, or globals
+    referenced in the source code:</p>
+    <div class="ic"><img src="images/Routine_popup.PNG" alt="Routine popup menu"/></div>
+    <p>To open a view for a referenced item, select its name in the source code,
+    right-click to open the popup menu, and select one of the <strong>Find</strong> commands.</p>
+
+    <h3 id="RoutineComparing">Comparing Routines Between Accounts</h3>
+    <p>Start comparing routines by clicking the
+    <img src="images/btnCompare.PNG" alt="Compare button"/> button
+    (located at the right end of the toolbar).</p>
+    <p>The <strong>Select Data Source</strong> dialog opens to let you choose the account
+    (and routine) to compare against:</p>
+    <div class="ic"><img src="images/SelectDataSource.PNG" alt="Select data source dialog"/></div>
+    <p>The source list includes all accounts currently open in the application.
+    It may also include a reference to the <em>VIVIAN</em> location.</p>
+    <p>To select an account, double-click its name (or select the name and click <strong>OK</strong>).
+    Once an account is selected, it will be used to retrieve the routine source code for comparison.
+    To skip the selection dialog and reuse the last selected account, hold <strong>Shift</strong>
+    while clicking the <strong>Compare</strong> button.</p>
+    <div class="ic"><img src="images/Compare_Source.PNG" alt="Compare source view"/></div>
+
+    <h3 id="RoutineCompareLayout">Compare Window Layout</h3>
+    <p>The Compare window includes:</p>
+    <ul>
+      <li>Main menu</li>
+      <li>Toolbar</li>
+      <li>Source map</li>
+      <li>Comparison grid</li>
+      <li>Status bar</li>
+    </ul>
+    <p>The main menu and toolbar provide access to comparison actions and review options.
+    Toolbar buttons are supplied with tooltips.</p>
+    <p>The source map is aligned to the left side of the comparison grid.
+    It represents the complete routine text and highlights locations where the code differs.
+    The colors used in both the map and the comparison grid can be customized.</p>
+    <div class="ic"><img src="images/Compare_Setup1.PNG" alt="Compare setup"/></div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     8. RPC VIEW
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="RPCView"><h2>8. RPC View</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The RPC Viewer allows users to access, review, edit, and test RPCs.</p>
+    <ol class="steps">
+      <li>Click the <img src="images/btnRPCs.PNG" alt="RPC button"/> button on the Account toolbar.</li>
+      <li>The RPC Selection dialog opens, listing RPCs registered in VistA file #8994:
+        <div class="ic"><img src="images/RPC_Select.PNG" alt="RPC selection dialog"/></div>
+      </li>
+      <li>Type the beginning of the RPC name, or use the alphabet buttons to navigate.</li>
+      <li>Select one or more RPCs and click <strong>OK</strong>. The selected RPCs are added to the project items list and the RPC View window opens.</li>
+    </ol>
+
+    <p>The RPC View window has four tabs:</p>
+    <ul>
+      <li><strong>Description</strong> — Data from FM File #8994 and the list of contexts that use this RPC.</li>
+      <li><strong>Implementation</strong> — Source code of the routine implementing the RPC.</li>
+      <li><strong>Execute</strong> — Specify parameters and execute the selected RPC; results are shown here and copied to the RPC log.</li>
+      <li><strong>Debug</strong> — Implementation and Execute views combined for easier debugging.</li>
+    </ul>
+
+    <h3 id="RPCDescriptionTab">Description Tab</h3>
+    <div class="ic"><img src="images/RPC_Description.PNG" alt="RPC description tab"/></div>
+
+    <h3 id="RPCImplementationTab">Implementation Tab</h3>
+    <div class="ic"><img src="images/RPC_Implementation.PNG" alt="RPC implementation tab"/></div>
+
+    <h3 id="RPCExecuteTab">Execute Tab</h3>
+    <div class="ic"><img src="images/RPC_Execute.PNG" alt="RPC execute tab"/></div>
+    <p>The initial parameter set is determined from the RPC definition in file #8994. If the definition contains no parameter information, you can add or remove parameters manually.</p>
+    <p>Supported parameter types: Literal, List, Word processing.</p>
+    <p>For list parameters, specify indexes using the format:</p>
+    <pre>Name=Value</pre>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     9. EVENT LOG
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="RPCLog"><h2>9. Event Log</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The Event Log tracks RPC execution and records additional information about application activity. For each RPC call, the log records:</p>
+    <ul>
+      <li>RPC name and time of execution</li>
+      <li>Parameters passed to the RPC</li>
+      <li>Execution results</li>
+    </ul>
+    <p>To open the Event Log, click the <strong>Event Log</strong> button on the Account toolbar.</p>
+    <div class="ic"><img src="images/RPC_Log.PNG" alt="Event log"/></div>
+    <p>To search the log, type a search term in the <strong>Find</strong> field and press <strong>Enter</strong> to highlight all matching records.</p>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     10. OPTIONS FILE
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="File19"><h2>10. Options File</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The Options File view presents data from VistA file #19.</p>
+    <ol class="steps">
+      <li>Click the <strong>Options</strong> button on the toolbar.</li>
+      <li>The option selection dialog opens:
+        <div class="ic"><img src="images/OptionSelect.PNG" alt="Option selection dialog"/></div>
+      </li>
+      <li>Use the tabs at the top to filter records by type: Action, Broker, Edit, Inquire, Menu, Print, Run, Protocol, Protocol menu, Extended action, Server, Limited, Screenman, Window, Window suite.</li>
+      <li>Select check boxes to open multiple records at once, then click <strong>OK</strong>.</li>
+    </ol>
+    <p>Option record data is displayed as a tree:</p>
+    <div class="ic"><img src="images/Options_View.PNG" alt="Options view"/></div>
+    <p>Double-click a menu node to view its contents. If a tree node is associated with a routine, double-clicking it opens the Routine source view.</p>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     11. VISTA ERROR LOG
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="ErrorLog"><h2>11. VistA Error Log</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The VistA Error Log view displays data from VistA files 3.075, 3.0751, and 3.0752.</p>
+    <div class="ic"><img src="images/ErrorLog.PNG" alt="Error log view"/></div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     12. PARAMETERS FILE
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="Parameters"><h2>12. Parameters File</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <p>The Parameters File view presents data from VistA PARAMETERS file #8989.5.</p>
+    <ol class="steps">
+      <li>Click the <strong>Parameters</strong> button on the toolbar.</li>
+      <li>The parameter selection dialog opens:
+        <div class="ic"><img src="images/Param_Select.PNG" alt="Parameter selection dialog"/></div>
+      </li>
+      <li>Double-click a parameter to open it directly, or select check boxes and click <strong>OK</strong> to open multiple records at once.</li>
+    </ol>
+    <p>The Parameter View includes a <strong>Description</strong> tab with general information about the selected parameter:</p>
+    <div class="ic"><img src="images/PARAM_Description.PNG" alt="Parameter description tab"/></div>
+    <p>Additional tabs present parameter values for every available entity:</p>
+    <div class="ic"><img src="images/PARAM_DataView.PNG" alt="Parameter data view"/></div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     13. CONFIGURATION AND PREFERENCES
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="Configuration"><h2>13. Configuration and Preferences</h2></div>
+
+<div class="row" id="ConfigFile">
+  <div class="lbl">Configuration File</div>
+  <div class="cnt">
+    <p>The configuration file stores connection parameters, open window descriptions, user comments, interface preferences, and more. By default it is located at:</p>
+    <pre>%APPDATA%\Roaming\FMView\</pre>
+    <p>To specify an alternative location, use the <code>/config</code> startup parameter:</p>
+    <pre>/config=<em>MyConfig.cfg</em></pre>
+  </div>
+</div>
+
+<div class="row" id="MasterPass">
+  <div class="lbl">Master Password</div>
+  <div class="cnt">
+    <p>The configuration file may contain Access/Verify codes stored in encrypted format. Encryption and decryption use the master password. If no password is provided, a default decryption method is applied.</p>
+    <div class="box dang">
+      <b>⚠ Warning</b>
+      There is no password validation. If the wrong password is entered, the decrypted Access/Verify codes will not work and connections will fail without an explicit error message.
+    </div>
+    <p>Use the <strong>Enter Master Password</strong> dialog to set the password:</p>
+    <div class="ic"><img src="images/MasterPassword.PNG" alt="Master password dialog"/></div>
+    <div class="box warn">
+      <b>⚠ Security Note</b>
+      Supplying the master password as a startup parameter (<code>/MPASS=</code>) is possible but not recommended, as it may be visible in system process listings or shortcut properties.
+    </div>
+  </div>
+</div>
+
+<div class="row" id="PrefDialog">
+  <div class="lbl">Preferences Dialog</div>
+  <div class="cnt">
+    <p>To open the Preferences dialog, click the Preferences button:</p>
+    <p><img src="images/PreferencesButton.PNG" alt="Preferences button"/></p>
+    <div class="ic"><img src="images/Preferences.PNG" alt="Preferences dialog"/></div>
+
+    <h3>Security</h3>
+    <ul><li>Set the master password</li></ul>
+
+    <h3>Autosave</h3>
+    <ul><li>Set the autosave interval (see <a href="#Autosave">Autosave</a>)</li></ul>
+
+    <h3>Interface</h3>
+    <ul>
+      <li>Use a custom main menu instead of the traditional menu bar</li>
+      <li>Select the style for project item presentation — tree or tabs</li>
+      <li>Select the color assigned to the project</li>
+      <li>Align the project items list to the left or right of the window</li>
+    </ul>
+
+    <h3>Connection</h3>
+    <ul>
+      <li>Set the name of the application RPC (default: <em>ZZFMVIEW</em>)</li>
+      <li>Copy <em>Access;Verify</em> codes to the clipboard</li>
+      <li>Turn the RPC log On or Off (the log is <em>On</em> by default)</li>
+    </ul>
+
+    <h3>Data Display</h3>
+    <ul>
+      <li>Select whether the file description details area is visible by default</li>
+      <li>Set the default number of global nodes returned per RPC call</li>
+    </ul>
+    <div class="box info"><b>ℹ Note</b>Most settings are also accessible from the Preferences menu without opening the full dialog.</div>
+  </div>
+</div>
+
+<div class="row" id="PrefMenu">
+  <div class="lbl">Preferences Menu</div>
+  <div class="cnt">
+    <p>To open the Preferences menu, click the black triangle on the Preferences button:</p>
+    <div class="ic"><img src="images/PreferencesMenu.PNG" alt="Preferences menu"/></div>
+    <p>The menu provides quick access to the most frequently used settings:</p>
+    <ul>
+      <li>Copy <em>Access;Verify</em> codes to the clipboard</li>
+      <li>Turn the RPC log On or Off</li>
+      <li>Set the name of the application RPC</li>
+      <li>Select the color assigned to the project</li>
+      <li>Select the style for project item presentation — tree or tabs</li>
+      <li>Align the project items list to the left or right of the window</li>
+      <li>Open or create a project notes window</li>
+      <li>Open a project from a file</li>
+      <li>Save project items to a file</li>
+    </ul>
+  </div>
+</div>
+
+<div class="row" id="Autosave">
+  <div class="lbl">Autosave</div>
+  <div class="cnt">
+    <p>Autosave protects your work by periodically saving the application configuration without user interaction. The autosave interval is specified in minutes. A save is triggered when no keyboard input or mouse clicks have been detected for the full interval.</p>
+    <ol class="steps">
+      <li>Open the Preferences dialog.</li>
+      <li>Click the <strong>Autosave Interval</strong> button:
+        <div class="ic"><img src="images/AutosaveIntervalButton.PNG" alt="Autosave interval button"/></div>
+      </li>
+      <li>Enter the interval value in minutes and confirm:
+        <div class="ic"><img src="images/AutosaveIntervalDialog.PNG" alt="Autosave interval dialog"/></div>
+      </li>
+    </ol>
+    <p>The default interval is <strong>30 minutes</strong>.</p>
+  </div>
+</div>
+
+<div class="row" id="StartupParams">
+  <div class="lbl">Startup Parameters</div>
+  <div class="cnt">
+    <p>The following parameters can be passed to the application executable, for example via a shortcut's <em>Target</em> field:</p>
+    <table class="rtab">
+      <tr><th>Parameter</th><th>Description</th><th>Example</th></tr>
+      <tr>
+        <td><code>/config=</code></td>
+        <td>Specifies an alternative path for the configuration file.</td>
+        <td><code>/config=C:\MyConfig.cfg</code></td>
+      </tr>
+      <tr>
+        <td><code>/MPASS=</code></td>
+        <td>Supplies the master password at startup. <strong>Not recommended</strong> — the value may be visible in process listings or shortcut properties.</td>
+        <td><code>/MPASS=MySecretPass</code></td>
+      </tr>
+      <tr>
+        <td><code>/NOPASSWORD</code></td>
+        <td>Forces use of the default decryption without prompting for a master password.</td>
+        <td><code>/NOPASSWORD</code></td>
+      </tr>
+      <tr>
+        <td><code>/GW</code></td>
+        <td>Enables saving changes to routine source code back to VistA. Without this switch, the <strong>Save As</strong> button in the Routine viewer is inactive.</td>
+        <td><code>/GW</code></td>
+      </tr>
+    </table>
+    <div class="box warn">
+      <b>⚠ Write Access Warning</b>
+      The <code>/GW</code> switch grants the ability to overwrite routine source code on the VistA server. Use it only on non-production accounts unless you are intentionally making server-side changes.
+    </div>
+  </div>
+</div>
+
+<div class="row" id="Tips">
+  <div class="lbl">Tips</div>
+  <div class="cnt">
+    <ul>
+      <li><strong>Ctrl+</strong> and <strong>Ctrl−</strong> increase and decrease the font size in all windows.</li>
+      <li>Double-clicking the <strong>Caption</strong> field in the Account List dialog populates all fields with the default connection parameters.</li>
+      <li>The <strong>Gear</strong> button <img src="images/Gear.PNG" alt="Gear button"/> opens the panel configuration dialog, which contains parameters for the RPCs <em>DDR LISTER</em> and <em>DDR FINDER</em> used to retrieve panel data.</li>
+      <li>The <strong>Menu</strong> button <img src="images/Menu.PNG" alt="Menu button"/> opens the quick search panel.</li>
+    </ul>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     14. CUSTOM RPC
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="RPC"><h2>14. Custom RPC</h2></div>
+
+<div class="row">
+  <div class="lbl">RPC Registration</div>
+  <div class="cnt">
+    <p>The application uses a custom RPC to retrieve data from VistA. Sample source code for the implementing routine is included in the Git archive.</p>
+    <p>Example RPC registration details:</p>
+    <pre>
+Properties
+        .01      Name                      ZZFMVIEW
+        .02      Tag                       RPC
+        .03      Routine                   VWFMVIEW
+        .04      Return Type               ARRAY
+        .05      Availability              PUBLIC
+
+Parameters Definition
+        #    Name         Type         Length       Required
+        ----------------------------------------------------
+        1    OPTION       LITERAL      8            YES
+        2    ARRAY        LIST         32000        NO
+    </pre>
+    <div class="box info">
+      <b>ℹ Note</b>
+      The RPC must be registered in the <strong>Application Context</strong> that matches the value entered in the connection record. The RPC name can be customized in the Preferences dialog if <code>ZZFMVIEW</code> conflicts with an existing RPC on your system.
+    </div>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     15. GLOSSARY
+════════════════════════════════════════════════════════════ -->
+<div class="sec" id="Glossary"><h2>15. Glossary</h2></div>
+
+<div class="row">
+  <div class="lbl"></div>
+  <div class="cnt">
+    <dl class="glos">
+      <dt>A/V Codes (Access/Verify Codes)</dt>
+      <dd>The two-part credentials used to authenticate a user on a VistA system. The Access code identifies the user; the Verify code is the password.</dd>
+
+      <dt>Caché</dt>
+      <dd>An object database management system by InterSystems, one of the supported runtime environments for VistA.</dd>
+
+      <dt>DD (Data Dictionary)</dt>
+      <dd>The FileMan structure that defines the metadata for a VistA file: its fields, cross-references, identifiers, and other attributes.</dd>
+
+      <dt>DIC</dt>
+      <dd>The global (<code>^DIC</code>) that serves as the FileMan index of all files registered in a VistA account.</dd>
+
+      <dt>FileMan</dt>
+      <dd>The database management system built into VistA. FileMan stores all clinical and administrative data in a hierarchical structure of files and fields.</dd>
+
+      <dt>FMDC (FileMan Delphi Components)</dt>
+      <dd>A Delphi component library that provides programmatic access to FileMan data, used internally by FMView.</dd>
+
+      <dt>Global</dt>
+      <dd>A persistent, hierarchically addressed variable stored in the VistA database. Globals are the underlying storage mechanism for all FileMan data.</dd>
+
+      <dt>GT.M</dt>
+      <dd>An open-source M (MUMPS) runtime and database engine, one of the supported environments for VistA.</dd>
+
+      <dt>Hash table</dt>
+      <dd>A namespace identifier used to select the target VistA instance when connecting through VistA Broker. Common values are <em>VistA</em>, <em>VistA Demo</em>, and <em>OSHERA</em>.</dd>
+
+      <dt>M (MUMPS)</dt>
+      <dd>The programming language in which VistA applications and routines are written.</dd>
+
+      <dt>RPC (Remote Procedure Call)</dt>
+      <dd>A registered server-side routine that can be invoked by a client application over the network through VistA Broker.</dd>
+
+      <dt>Routine</dt>
+      <dd>A named M program stored on the VistA server. Routines implement application logic and are identified by their name in the <code>^ROUTINE</code> global.</dd>
+
+      <dt>VistA</dt>
+      <dd>Veterans Health Information Systems and Technology Architecture — the electronic health record and hospital information system used by the U.S. Department of Veterans Affairs.</dd>
+
+      <dt>VistA Broker (XWB)</dt>
+      <dd>The client-server communication layer for VistA. It allows desktop applications to call RPCs on a remote VistA server over TCP/IP.</dd>
+
+      <dt>VIVIAN</dt>
+      <dd>A public VistA reference source accessible through the comparison feature, allowing local routines to be compared against a known baseline.</dd>
+
+      <dt>XWB</dt>
+      <dd>See <em>VistA Broker</em>.</dd>
+    </dl>
+    <p class="back"><a href="#toc">↑ Back to Contents</a></p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <a href="mailto:zzFMTools@gmail.com">zzFMTools@gmail.com</a><br>
+  &copy; AA, 2019&ndash;2026
+</footer>
+
+</div><!-- /page -->
+</body>
+</html>
