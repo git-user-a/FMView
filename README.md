@@ -33,7 +33,7 @@ and RPC execution. This log file is stored on the local machine where the applic
 Configuration information is saved in user's AppData\FMView folder.
 
 ### Implementation ###
-FMView v2 is built with Embarcadero Delphi 12 (Community Edition).
+FMView is built with Embarcadero Delphi (Community Edition).
 VistA Files data is accessed by FileMan Delphi Components (FMDC v1.0) library.
 The information about definition of VistA components (files definition,
 routines source, and globals contents) is provided by custom  RPC.
@@ -53,4 +53,4 @@ Questions, suggestions, and criticisms are welcome at zzFMTools@gmail.com
 ### Credits ###
 Special thanks to the [**WorldVistA open-source community**](https://worldvista.org/) for providing access to test databases, engaging in discussions, and offering invaluable feedback.
 
-**2025.05.14**
+**2026.09.02**
